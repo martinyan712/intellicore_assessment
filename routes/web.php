@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DoorController;
+use App\Http\Controllers\CodeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,17 +21,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/door', function () {
-    return view('door');
-})->middleware(['auth', 'verified'])->name('door');
 
-Route::get('/code', function () {
-    return view('code');
-})->middleware(['auth', 'verified'])->name('code');
+Route::get('/dashboard', [AdminController::class,'dashboard'])->middleware(['auth'])->name('dashboard');
+
+
+Route::prefix('door')->middleware(['auth'])->name('door.')->group(function () {
+    Route::get('/list', [DoorController::class,'list'])->middleware(['auth'])->name('list');
+    Route::get('/detail/{id}', [DoorController::class,'detail'])->middleware(['auth'])->name('detail');
+    Route::get('/create', [DoorController::class,'create'])->middleware(['auth'])->name('create');
+    Route::get('/edit/{id}', [DoorController::class,'edit'])->middleware(['auth'])->name('edit');
+});
+
+Route::prefix('code')->middleware(['auth'])->name('code.')->group(function () {
+    Route::get('/list', [CodeController::class,'list'])->middleware(['auth'])->name('list');
+    Route::get('/detail/{id}', [CodeController::class,'detail'])->middleware(['auth'])->name('detail');
+    //Route::get('/create', [CodeController::class,'create'])->middleware(['auth'])->name('create');
+    Route::get('/edit/{id}', [CodeController::class,'edit'])->middleware(['auth'])->name('edit');
+    Route::get('/history', [CodeController::class,'history'])->middleware(['auth'])->name('history');
+    Route::post('/generate', [CodeController::class,'generate'])->middleware(['auth'])->name('generate');
+    Route::post('/check', [CodeController::class,'checkNumber'])->middleware(['auth'])->name('generate');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
