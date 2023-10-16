@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Code extends Model
 {
@@ -18,6 +19,11 @@ class Code extends Model
         'code',
     ];
 
+
+    public function doors(): BelongsToMany
+    {
+        return $this->belongsToMany(Door::class,'doors_codes');
+    }
 
     /**
      * The attributes that should be cast.

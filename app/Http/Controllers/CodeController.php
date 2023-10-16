@@ -25,14 +25,14 @@ class CodeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function list(Request $request)
+    public function index(Request $request)
     {
-        $viewPage = $this->viewFolder.'.list';
+        $viewPage = $this->viewFolder.'.index';
+
         
         $request->request->add(
             ['mRequest' => ['params'=>
                 [
-                    'code_count'=>Code::count()
                 ]
             ]
         ]);
@@ -185,5 +185,17 @@ class CodeController extends Controller
     public function atleastuniqchar($code, $char){
         $uniqueCharacterCount = count(array_unique(str_split($code)));
         return ($uniqueCharacterCount >= $char);
+    }
+
+    public function list(Request $request)
+    {
+        $limit = $request->limit | 10;
+        $offset = ($request->page - 1) * $limit;
+
+
+       $count =  Code::count();
+       $codes = Code::with('doors')->skip($offset)->take($limit)->get();
+
+        return response()->json(['success'=>true, 'list'=>$codes,'count'=>$count]);
     }
 }

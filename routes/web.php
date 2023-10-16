@@ -27,13 +27,16 @@ Route::get('/dashboard', [AdminController::class,'dashboard'])->middleware(['aut
 
 
 Route::prefix('door')->middleware(['auth'])->name('door.')->group(function () {
+    Route::get('/index', [DoorController::class,'index'])->middleware(['auth'])->name('index');
     Route::get('/list', [DoorController::class,'list'])->middleware(['auth'])->name('list');
     Route::get('/detail/{id}', [DoorController::class,'detail'])->middleware(['auth'])->name('detail');
-    Route::get('/create', [DoorController::class,'create'])->middleware(['auth'])->name('create');
+    //Route::get('/create', [DoorController::class,'create'])->middleware(['auth'])->name('create');
+    Route::post('/create', [DoorController::class,'create'])->middleware(['auth'])->name('create.submit');
     Route::get('/edit/{id}', [DoorController::class,'edit'])->middleware(['auth'])->name('edit');
 });
 
 Route::prefix('code')->middleware(['auth'])->name('code.')->group(function () {
+    Route::get('/index', [CodeController::class,'index'])->middleware(['auth'])->name('index');
     Route::get('/list', [CodeController::class,'list'])->middleware(['auth'])->name('list');
     Route::get('/detail/{id}', [CodeController::class,'detail'])->middleware(['auth'])->name('detail');
     //Route::get('/create', [CodeController::class,'create'])->middleware(['auth'])->name('create');
