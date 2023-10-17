@@ -1,6 +1,6 @@
 @props(['url'=>''])
 <style>
-    .form-fields {
+  .myTable  .form-fields {
   background-color: white;
   display: flex;
   flex-direction: row;
@@ -9,29 +9,35 @@
   border-bottom: #2b2b2b 1px solid;
 }
 
-.search {
+.myTable .search {
   min-width: 500px;
 }
 
-.result-table {
+.myTable .result-table {
   min-width: 100%;
 }
 
-.result-table th {
+.myTable .result-table th {
   padding: 10px;
   /* border: white 1px solid; */
 }
 
-.result-table tr {
+.myTable .result-table tr {
   border-bottom: white 0.5px solid;
 }
 
-.pagination{
+.myTable .pagination{
   margin: 20px 0px;
 }
+
+.myTable .total{
+  text-align:center;
+}
+
+
 </style>
 
-<div x-data="getData()" data-reflect-root="" >
+<div x-data="getData()" data-reflect-root="" class="myTable">
     <form class="form-fields">
       <div class="field search">
         <label class="label" style="display:inline-block;">Search</label>
@@ -69,6 +75,7 @@
           <li><a class="pagination-link" x-model="lastPage" x-text="lastPage" @click="fetchData(lastPage)"></a></li>
         </ul>
       </nav>
+      <p class="total">Total: <span x-text="total"></span></p>
   </div>
   <script type="text/javascript">
     function getData() {

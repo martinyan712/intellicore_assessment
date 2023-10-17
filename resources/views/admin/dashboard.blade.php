@@ -30,7 +30,7 @@
                     'Content-Type': 'application/json; charset=UTF-8',
                     'X-CSRF-TOKEN': document.head.querySelector('meta[name=csrf-token]').content
                 },
-                body:  JSON.stringify({'generate':true})
+                body:  JSON.stringify({'generate':true,'number':100})
             })).json();
         this.generateDisabled = false;
         if(code.success){

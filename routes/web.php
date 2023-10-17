@@ -32,7 +32,7 @@ Route::prefix('door')->middleware(['auth'])->name('door.')->group(function () {
     Route::get('/detail/{id}', [DoorController::class,'detail'])->middleware(['auth'])->name('detail');
     //Route::get('/create', [DoorController::class,'create'])->middleware(['auth'])->name('create');
     Route::post('/create', [DoorController::class,'create'])->middleware(['auth'])->name('create.submit');
-    Route::get('/edit/{id}', [DoorController::class,'edit'])->middleware(['auth'])->name('edit');
+    Route::post('/edit/{id}', [DoorController::class,'edit'])->middleware(['auth'])->name('edit');
 });
 
 Route::prefix('code')->middleware(['auth'])->name('code.')->group(function () {
@@ -40,7 +40,7 @@ Route::prefix('code')->middleware(['auth'])->name('code.')->group(function () {
     Route::get('/list', [CodeController::class,'list'])->middleware(['auth'])->name('list');
     Route::get('/detail/{id}', [CodeController::class,'detail'])->middleware(['auth'])->name('detail');
     //Route::get('/create', [CodeController::class,'create'])->middleware(['auth'])->name('create');
-    Route::get('/edit/{id}', [CodeController::class,'edit'])->middleware(['auth'])->name('edit');
+    Route::post('/edit/{id}', [CodeController::class,'edit'])->middleware(['auth'])->name('edit');
     Route::get('/history', [CodeController::class,'history'])->middleware(['auth'])->name('history');
     Route::post('/generate', [CodeController::class,'generate'])->middleware(['auth'])->name('generate');
     Route::post('/check', [CodeController::class,'checkNumber'])->middleware(['auth'])->name('generate');

@@ -9,6 +9,8 @@ class CodeHistory extends Model
 {
     use HasFactory;
 
+    protected $table = 'codehistory';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -17,7 +19,19 @@ class CodeHistory extends Model
     protected $fillable = [
         'isActive',
         'expired_at',
+        'code_id',
+        'door_id'
     ];
+
+    public function codes()
+    {
+        return $this->hasMany(Code::class,'id');
+    }
+
+    public function doors()
+    {
+        return $this->hasMany(Door::class,'id');
+    }
 
 
     /**

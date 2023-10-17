@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Code as Code;
+use App\Models\Door as Door;
 use App\Models\DoorCode as DoorCode;
+use App\Models\CodeHistory as CodeHistory;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class CodeController extends Controller
 {
@@ -42,10 +46,79 @@ class CodeController extends Controller
 		
     }
 
+    public function detail(Request $request,$id){
+        $viewPage = $this->viewFolder.'.detail';
+
+        $code = Code::where('id',$id)->firstOrFail();
+        $doors = Door::doesntHave('codes')->where('status',1) ->orWhere(function ($query) use ($id){
+            $query->whereRelation('codes','doors_codes.code_id',$id);
+        })->get(['id','name']);
+        $doors->prepend(["id"=>'',"name"=>'']);
+        $codedoor =  DoorCode::where('code_id', $id)->first();
+        $request->request->add(
+            ['mRequest' => ['params'=>
+                [
+                   'code' => $code,
+                   'doors'=>$doors,
+                   'code_door'=>($codedoor)?$codedoor->door_id:null
+                ]
+            ]
+        ]);
+		
+		$this->pageConfig($viewPage,$request,$response);
+		return $response;
+    }
+
+    public function edit(Request $request,$id){
+        $validator = Validator::make($request->all(), [
+            'door' => 'required|exists:doors,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success'=>false, 'message'=>$validator->errors()],422);
+        }
+        $code = Code::where('id',$id)->firstOrFail();
+        DoorCode::where('code_id', $id)->delete();
+
+        if($request->door != ''){
+            CodeHistory::where('isActive',1)->where('code_id',$id)->update([
+                'isActive'=>0,
+                'expired_at'=>Carbon::now()
+            ]);
+            DoorCode::create([
+                'door_id'=>$request->door,
+                'code_id'=>$id
+            ]);
+            CodeHistory::create([
+                'door_id'=>$request->door,
+                'code_id'=>$id,
+                'isActive'=>1
+            ]);
+
+
+        }
+
+        $result = ['success'=>true, 'code'=>Code::where('id',$id)->first()];
+
+        if($request->door){
+            $result['door'] = Door::where('id',$request->door)->first();
+        }
+
+        return response()->json($result);
+
+    }
+
     public function generate(Request $request){
+        $validator = Validator::make($request->all(), [
+            'number' => 'required|integer|min_digits:1',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['success'=>false, 'message'=>$validator->errors()],422);
+        }
+
         if($request->generate){
             //Rand digit
-            $numbers = 100;
+            $numbers = $request->number;
             if($request->has('numbers')){
                 $numbers = $request->numbers;
             }

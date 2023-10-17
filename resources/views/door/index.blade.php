@@ -38,9 +38,9 @@
             <tr>
               <th x-text="event.id"></th>
               <th x-text="event.name"></th>
-              <th x-text="(event.codes.length>0)?event.codes[0]:''"></th>
+              <th x-text="(event.codes.length>0)?event.codes[0].code:''"></th>
               <th x-text="(event.status)?'Active':'InActive'"></th>
-              <th><a class="btn btn-primary" x-bind:href="'/door/edit/' + event.id">Edit</a></th>
+              <th><a class="btn btn-primary" x-bind:href="'/door/detail/' + event.id">Edit</a></th>
             </tr>
         </x-slot>
     </x-app-widgets.table>
@@ -58,8 +58,8 @@
             })).json();
         if(door.success){
             this.doorCreated = true;
-           console.log(window.Alpine.refs);
             alert("Door Created");
+            location.reload();
         }else{
             alert(door.message.name);
         }
